@@ -19,7 +19,26 @@ namespace CBRE.Editor.Visgroups
             InitializeComponent();
             _visgroups = new List<Visgroup>(doc.Map.Visgroups.Where(x => !x.IsAutomatic).Select(x => x.Clone()));
             _deleted = new List<Visgroup>();
+            InitVisgroupPanel();
             UpdateVisgroups();
+        }
+
+        public void InitVisgroupPanel() {
+            VisgroupPanel = new VisgroupPanel();
+            VisgroupPanel.Anchor = ((AnchorStyles.Top | AnchorStyles.Bottom)
+                | AnchorStyles.Left)
+                | AnchorStyles.Right;
+            VisgroupPanel.DisableAutomatic = false;
+            VisgroupPanel.HideAutomatic = true;
+            VisgroupPanel.Location = new Point(12, 12);
+            VisgroupPanel.Name = "VisgroupPanel";
+            VisgroupPanel.ShowCheckboxes = false;
+            VisgroupPanel.ShowHidden = false;
+            VisgroupPanel.Size = new Size(233, 323);
+            VisgroupPanel.SortAutomaticFirst = false;
+            VisgroupPanel.TabIndex = 0;
+            VisgroupPanel.VisgroupSelected += new VisgroupPanel.VisgroupSelectedEventHandler(SelectionChanged);
+            Controls.Add(VisgroupPanel);
         }
 
         public void PopulateChangeLists(Document doc, List<Visgroup> newVisgroups, List<Visgroup> changedVisgroups, List<Visgroup> deletedVisgroups)

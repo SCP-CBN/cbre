@@ -20,4 +20,10 @@
     <ProjectReference Include="..\CBRE.Packages\CBRE.Packages.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="Assimp64.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

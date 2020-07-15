@@ -49,6 +49,8 @@ namespace CBRE.Providers.Map {
             //now we can parse the object table
             List<string> materials = new List<string>();
             List<Tuple<int, string>> meshReferences = new List<Tuple<int, string>>();
+            Dictionary<int, Group> groups = new Dictionary<int, Group>();
+            Dictionary<int, int> visgroups = new Dictionary<int, int>();
             br.BaseStream.Seek(objectOffset, SeekOrigin.Begin);
             long objectStartPos = br.BaseStream.Position;
             for (int i = 0; i < objectCount; i++) {
@@ -59,7 +61,24 @@ namespace CBRE.Providers.Map {
                     name = names[index];
                 }
 
-                if (name == "meshreference") {
+                if (name == "group") {
+                    byte flags = br.ReadByte();
+                    Int32 groupIndex = br.ReadInt32();
+
+                    Group newGroup = new Group(map.IDGenerator.GetNextObjectID());
+                    newGroup.SetParent(map.WorldSpawn);
+
+                    groups.Add(i, newGroup);
+                } else if (name == "visgroup") {
+                    byte flags = br.ReadByte();
+                    string groupName = names[br.ReadInt32() - 1];
+                    byte colorR = br.ReadByte(); byte colorG = br.ReadByte(); byte colorB = br.ReadByte();
+
+                    Visgroup newGroup = new Visgroup() { Name = groupName, ID = visgroups.Count+1 };
+                    newGroup.Colour = System.Drawing.Color.FromArgb(colorR, colorG, colorB);
+                    map.Visgroups.Add(newGroup);
+                    visgroups.Add(i, newGroup.ID);
+                } else if (name == "meshreference") {
                     byte flags = br.ReadByte();
 
                     Int32 groupNameInd = br.ReadInt32() - 1;
@@ -89,6 +108,7 @@ namespace CBRE.Providers.Map {
                 if (index >= 0 && index < names.Count) {
                     name = names[index];
                 }
+
                 if (name == "mesh") {
                     Property newProperty;
 
@@ -117,8 +137,12 @@ namespace CBRE.Providers.Map {
                             entity.EntityData.Properties.Add(newProperty);
                         }
                     }
-                    Int32 group = br.ReadInt32();
-                    Int32 visgroup = br.ReadInt32();
+
+                    Int32 groupIndex = br.ReadInt32() - 1;
+                    Int32 visgroupIndex = br.ReadInt32() - 1;
+                    if (visgroups.ContainsKey(visgroupIndex)) {
+                        entity.Visgroups.Add(visgroups[visgroupIndex]);
+                    }
 
                     byte red = br.ReadByte(); byte green = br.ReadByte(); byte blue = br.ReadByte();
 
@@ -164,8 +188,11 @@ namespace CBRE.Providers.Map {
 
                     br.BaseStream.Position += size - (br.BaseStream.Position - startPos);
 
-                    if (entity != null) {
-                        entity.UpdateBoundingBox();
+                    entity.UpdateBoundingBox();
+
+                    if (groups.ContainsKey(groupIndex)) {
+                        entity.SetParent(groups[groupIndex]);
+                    } else {
                         entity.SetParent(map.WorldSpawn);
                     }
                 } else if (name == "entity") {
@@ -192,11 +219,19 @@ namespace CBRE.Providers.Map {
                             entity.EntityData.Properties.Add(newProperty);
                         }
                     }
-                    Int32 group = br.ReadInt32();
-                    Int32 visgroup = br.ReadInt32();
+
+                    Int32 groupIndex = br.ReadInt32() - 1;
+                    Int32 visgroupIndex = br.ReadInt32() - 1;
+                    if (visgroups.ContainsKey(visgroupIndex)) {
+                        entity.Visgroups.Add(visgroups[visgroupIndex]);
+                    }
 
                     entity.UpdateBoundingBox();
-                    entity.SetParent(map.WorldSpawn);
+                    if (groups.ContainsKey(groupIndex)) {
+                        entity.SetParent(groups[groupIndex]);
+                    } else {
+                        entity.SetParent(map.WorldSpawn);
+                    }
                 } else if (name == "brush") {
                     bool invisibleCollision = false;
 
@@ -213,8 +248,8 @@ namespace CBRE.Providers.Map {
                             }
                         }
                     }
-                    Int32 groupIndex = br.ReadInt32();
-                    Int32 visgroupIndex = br.ReadInt32();
+                    Int32 groupIndex = br.ReadInt32() - 1;
+                    Int32 visgroupIndex = br.ReadInt32() - 1;
 
                     byte red = br.ReadByte(); byte green = br.ReadByte(); byte blue = br.ReadByte();
 
@@ -331,11 +366,19 @@ namespace CBRE.Providers.Map {
                         face.Parent = newSolid;
                         newSolid.Faces.Add(face);
                     }
+                    if (visgroups.ContainsKey(visgroupIndex)) {
+                        newSolid.Visgroups.Add(visgroups[visgroupIndex]);
+                    }
                     newSolid.Colour = Colour.GetRandomBrushColour();
                     newSolid.UpdateBoundingBox();
 
+                    MapObject parent = map.WorldSpawn;
+                    if (groups.ContainsKey(groupIndex)) {
+                        parent = groups[groupIndex];
+                    }
+
                     if (newSolid.IsValid()) {
-                        newSolid.SetParent(map.WorldSpawn);
+                        newSolid.SetParent(parent);
 
                         newSolid.Transform(new UnitScale(Coordinate.One, newSolid.BoundingBox.Center), TransformFlags.None);
                     } else {
@@ -352,7 +395,7 @@ namespace CBRE.Providers.Map {
                                     tf.Texture = face.Texture.Clone();
                                     tf.UpdateBoundingBox();
                                     newSolid = SolidifyFace(map, tf, offset);
-                                    newSolid.SetParent(map.WorldSpawn);
+                                    newSolid.SetParent(parent);
                                     newSolid.UpdateBoundingBox();
 
                                     newSolid.Transform(new UnitScale(Coordinate.One, newSolid.BoundingBox.Center), TransformFlags.None);
@@ -360,7 +403,7 @@ namespace CBRE.Providers.Map {
                             } else {
                                 // cone/pyramid/whatever
                                 newSolid = SolidifyFace(map, face, offset);
-                                newSolid.SetParent(map.WorldSpawn);
+                                newSolid.SetParent(parent);
                                 newSolid.UpdateBoundingBox();
 
                                 newSolid.Transform(new UnitScale(Coordinate.One, newSolid.BoundingBox.Center), TransformFlags.None);

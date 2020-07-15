@@ -80,6 +80,10 @@
     <Compile Include="ViewportEvent.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CBRE.Common\CBRE.Common.csproj">
+      <Project>{5d414ac8-8b93-489f-9960-877923400fed}</Project>
+      <Name>CBRE.Common</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CBRE.DataStructures\CBRE.DataStructures.csproj">
       <Project>{26A974C9-E495-4FA3-8E87-1E00019D04F5}</Project>
       <Name>CBRE.DataStructures</Name>

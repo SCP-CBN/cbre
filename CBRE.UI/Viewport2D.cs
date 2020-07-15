@@ -1,4 +1,5 @@
 ﻿using CBRE.DataStructures.Geometric;
+using CBRE.Extensions;
 using CBRE.Graphics;
 using CBRE.Graphics.Helpers;
 using OpenTK;
@@ -113,9 +114,7 @@ namespace CBRE.UI {
             get { return _zoom; }
             set {
                 var old = _zoom;
-                _zoom = value;
-                if (_zoom < 0.001m) { _zoom = 0.001m; }
-                if (_zoom > 10000m) { _zoom = 10000m; }
+                _zoom = DMath.Clamp(value, 0.001m, 10000m);
                 Listeners.OfType<IViewport2DEventListener>()
                     .ToList().ForEach(l => l.ZoomChanged(old, _zoom));
             }

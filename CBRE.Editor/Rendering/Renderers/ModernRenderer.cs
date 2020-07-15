@@ -1,6 +1,7 @@
 ﻿using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
 using CBRE.DataStructures.Models;
+using CBRE.DataStructures.Transformations;
 using CBRE.Editor.Documents;
 using CBRE.Editor.Extensions;
 using CBRE.Editor.Rendering.Arrays;
@@ -180,13 +181,14 @@ namespace CBRE.Editor.Rendering.Renderers {
                         var scale = tuple.Item1.EntityData.GetPropertyCoordinate("scale", Coordinate.One);
                         scale = new Coordinate(scale.X, scale.Z, scale.Y);
                         var angles = tuple.Item1.EntityData.GetPropertyCoordinate("angles", Coordinate.Zero);
+                        if (tuple.Item1.IsSelected) {
+                            origin *= _selectionTransformMat;
+
+                            angles = Entity.TransformToEuler(new UnitMatrixMult(_selectionTransformMat.Inverse()), angles);
+                        }
                         Matrix pitch = Matrix.Rotation(Quaternion.EulerAngles(DMath.DegreesToRadians(angles.X), 0, 0));
                         Matrix yaw = Matrix.Rotation(Quaternion.EulerAngles(0, 0, -DMath.DegreesToRadians(angles.Y)));
                         Matrix roll = Matrix.Rotation(Quaternion.EulerAngles(0, DMath.DegreesToRadians(angles.Z), 0));
-                        if (tuple.Item1.IsSelected) {
-                            origin *= _selectionTransformMat;
-                            // TODO: rotation/angles
-                        }
                         var tform = (yaw * roll * pitch * Matrix.Scale(scale)).Translate(origin);
                         _mapObject3DShader.Transformation = tform.ToGLSLMatrix4();
                         arr.RenderTextured(context.Context);
