@@ -277,7 +277,7 @@ namespace CBRE.Editor.Compiling {
 
                 string modelName = prop.EntityData.GetPropertyValue("file");
                 if (!modelName.Contains('.')) {
-                    modelName = System.IO.Path.GetFileName(Directories.GetModelPath(modelName));
+                    modelName = System.IO.Path.GetFileName(Directories.GetModelPath(modelName)) ?? (modelName+".x");
                 }
                 br.WriteB3DString(modelName);
 
