@@ -1,11 +1,11 @@
-﻿using CBRE.DataStructures.GameData;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using CBRE.DataStructures.GameData;
 using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Documents;
 using CBRE.Providers.Texture;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace CBRE.Editor.Extensions {
     public static class SpriteExtensions {

@@ -1,4 +1,5 @@
-using CBRE.DataStructures.GameData;
+﻿using CBRE.DataStructures.GameData;
+using CBRE.DataStructures.Geometric;
 using CBRE.DataStructures.MapObjects;
 using CBRE.Editor.Documents;
 using CBRE.Editor.Extensions;
@@ -56,16 +57,13 @@ namespace CBRE.Editor.Rendering.Helpers {
             if (tex == null) TextureHelper.Unbind();
             else tex.Bind();
 
-            GL.Color3(Color.White);
+            //this might be the shittiest code i've ever written
+            if (entity.ClassName == "light") {
+                CoordinateF col = new CoordinateF(entity.EntityData.GetPropertyCoordinate("color"));
 
-            if (entity.GameData != null) {
-                var col = entity.GameData.Properties.FirstOrDefault(x => x.VariableType == VariableType.Color255);
-                if (col != null) {
-                    var val = entity.EntityData.Properties.FirstOrDefault(x => x.Key == col.Name);
-                    if (val != null) {
-                        GL.Color3(val.GetColour(Color.White));
-                    }
-                }
+                GL.Color3(Color.FromArgb((int)Math.Round(col.X), (int)Math.Round(col.Y), (int)Math.Round(col.Z)));
+            } else {
+                GL.Color3(Color.White);
             }
 
             // todo rotation/orientation types
