@@ -587,7 +587,11 @@ namespace CBRE.Editor {
             this.KeyPreview = true;
             this.MainMenuStrip = this.mnuMain;
             this.Name = "Editor";
+#if x64
             this.Text = "CBRE";
+#else
+            this.Text = "CBRE (x86)";
+#endif
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EditorClosing);
             this.Load += new System.EventHandler(this.EditorLoad);
@@ -607,7 +611,7 @@ namespace CBRE.Editor {
 
         }
 
-        #endregion
+#endregion
 
         private System.Windows.Forms.MenuStrip mnuMain;
         private System.Windows.Forms.StatusStrip stsStatus;

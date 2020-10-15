@@ -499,7 +499,6 @@ namespace CBRE.Editor.UI
                 var img = _streamSource.GetImage(item);
                 if (img == null) return;
                 if (_renderCache.ContainsKey(item)) _renderCache[item] = img;
-                //else img.Dispose();
             });
         }
 

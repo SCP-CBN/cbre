@@ -407,9 +407,17 @@ namespace CBRE.Editor {
         private void UpdateTitle() {
             if (DocumentManager.CurrentDocument != null) {
                 var doc = DocumentManager.CurrentDocument;
+#if x64
                 Text = "CBRE - " + (String.IsNullOrWhiteSpace(doc.MapFile) ? "Untitled" : System.IO.Path.GetFileName(doc.MapFile));
+#else
+                Text = "CBRE (x86) - " + (String.IsNullOrWhiteSpace(doc.MapFile) ? "Untitled" : System.IO.Path.GetFileName(doc.MapFile));
+#endif
             } else {
+#if x64
                 Text = "CBRE";
+#else
+                Text = "CBRE (x86)";
+#endif
             }
         }
 
@@ -585,7 +593,7 @@ namespace CBRE.Editor {
             Mediator.ExecuteDefault(this, message, data);
         }
 
-        #endregion
+#endregion
 
         private void RecentFile(string path) {
             if (TaskbarManager.IsPlatformSupported) {
