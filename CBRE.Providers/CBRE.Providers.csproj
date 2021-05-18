@@ -68,6 +68,7 @@
     <Compile Include="Map\MapProvider.cs" />
     <Compile Include="Map\MSL2Provider.cs" />
     <Compile Include="Map\CBRProvider.cs" />
+    <Compile Include="Map\RMeshProvider.cs" />
     <Compile Include="Map\VmfProvider.cs" />
     <Compile Include="Model\AssimpProvider.cs" />
     <Compile Include="Model\ModelProvider.cs" />
