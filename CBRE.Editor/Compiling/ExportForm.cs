@@ -65,6 +65,7 @@ namespace CBRE.Editor.Compiling {
                 filter += "SCP-CB v1.4 RM2 (*.rm2)|*.rm2|";
 #endif
                 filter += "SCP-CB v1.3.11 RMesh (*.rmesh)|*.rmesh";
+                filter += "|SCP-087-B (*.b)|*.b";
                 filter += "|Autodesk Filmbox (*.fbx)|*.fbx";
                 filter += "|Wavefront Object (*.obj)|*.obj";
                 filter += "|Stereolithography (*.stl)|*.stl";
@@ -180,6 +181,8 @@ namespace CBRE.Editor.Compiling {
                         RM2Export.SaveToFile(SaveFileName, Document, this);
                     } else if (extension.Equals(".rmesh", StringComparison.OrdinalIgnoreCase)) {
                         RMeshExport.SaveToFile(SaveFileName, Document, this);
+                    } else if (extension.Equals(".b", StringComparison.OrdinalIgnoreCase)) {
+                        BExport.SaveToFile(SaveFileName, Document, this);
                     } else if (extension.Equals(".fbx", StringComparison.OrdinalIgnoreCase) ||
                           extension.Equals(".obj", StringComparison.OrdinalIgnoreCase) ||
                           extension.Equals(".dae", StringComparison.OrdinalIgnoreCase) ||
