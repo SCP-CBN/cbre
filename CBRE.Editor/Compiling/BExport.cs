@@ -80,7 +80,7 @@ namespace CBRE.Editor.Compiling {
                         br.Write((float)v.DTextureU);
                         br.Write((float)v.DTextureV);
                     }
-                    br.Write(indices.Count / 3);
+                    br.Write(indices.Count);
                     foreach (int index in indices) {
                         br.Write(index);
                     }
