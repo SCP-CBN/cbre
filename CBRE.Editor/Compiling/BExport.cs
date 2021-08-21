@@ -32,6 +32,7 @@ namespace CBRE.Editor.Compiling {
                             bool found = false;
                             for (int i = 0; i < vertices.Count; i++) {
                                 if (vertices[i].Location.EquivalentTo(v.Location, 0.01M)
+                                    && vertices[i].Parent.Plane.Normal.EquivalentTo(v.Parent.Plane.Normal, 0.01M)
                                     && Math.Abs(vertices[i].DTextureU - v.DTextureU) < 0.01
                                     && Math.Abs(vertices[i].DTextureV - v.DTextureV) < 0.01) {
                                     vertToInd.Add(v, i);
@@ -77,6 +78,9 @@ namespace CBRE.Editor.Compiling {
                         br.Write((float)v.Location.DX);
                         br.Write((float)v.Location.DZ);
                         br.Write((float)v.Location.DY);
+                        br.Write((float)v.Parent.Plane.Normal.DX);
+                        br.Write((float)v.Parent.Plane.Normal.DZ);
+                        br.Write((float)v.Parent.Plane.Normal.DY);
                         br.Write((float)v.DTextureU);
                         br.Write((float)v.DTextureV);
                     }
