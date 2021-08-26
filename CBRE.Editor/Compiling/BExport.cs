@@ -81,6 +81,12 @@ namespace CBRE.Editor.Compiling {
                         br.Write((float)v.Parent.Plane.Normal.DX);
                         br.Write((float)v.Parent.Plane.Normal.DZ);
                         br.Write((float)v.Parent.Plane.Normal.DY);
+                        br.Write((float)v.Parent.Texture.UAxis.X);
+                        br.Write((float)v.Parent.Texture.UAxis.Z);
+                        br.Write((float)v.Parent.Texture.UAxis.Y);
+                        br.Write((float)v.Parent.Texture.VAxis.X);
+                        br.Write((float)v.Parent.Texture.VAxis.Z);
+                        br.Write((float)v.Parent.Texture.VAxis.Y);
                         br.Write((float)v.DTextureU);
                         br.Write((float)v.DTextureV);
                     }

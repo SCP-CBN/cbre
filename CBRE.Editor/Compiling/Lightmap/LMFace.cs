@@ -50,6 +50,7 @@ namespace CBRE.Editor.Compiling.Lightmap {
 
             CastsShadows = !(solid?.Parent?.GetEntityData()?.Name.Equals("noshadow", StringComparison.OrdinalIgnoreCase) ?? false);
 
+            // TODO: Replace with U/VAxis texture member.
             int i1 = 0;
             int i2 = 1;
             int i3 = 2;
