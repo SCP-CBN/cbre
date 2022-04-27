@@ -42,18 +42,22 @@ namespace CBRE.Editor.Logging {
         public string FriendlyOSName() {
             Version version = System.Environment.OSVersion.Version;
             string os;
+
             switch (version.Major) {
                 case 6:
                     switch (version.Minor) {
-                        case 1: os = $"Windows 7 (NT {version.Major}.{version.Minor}, Build {version.Build})"; break;
-                        case 2: os = $"Windows 8 (NT {version.Major}.{version.Minor}, Build {version.Build})"; break;
-                        case 3: os = $"Windows 8.1 (NT {version.Major}.{version.Minor}, Build {version.Build})"; break;
+                        case 1: os = "Windows 7"; break;
+                        case 2: os = "Windows 8"; break;
+                        case 3: os = "Windows 8.1"; break;
                         default: os = "Unknown"; break;
                     }
                     break;
                 case 10:
                     switch (version.Minor) {
-                        case 0: os = $"Windows 10 (NT {version.Major}.{version.Minor}, Build {version.Build})"; break;
+                        case 0:
+                            if (version.Build >= 22000) os = "Windows 11";
+                            else os = "Windows 10";
+                            break;
                         default: os = "Unknown"; break;
                     }
                     break;
@@ -61,6 +65,7 @@ namespace CBRE.Editor.Logging {
                     os = "Unknown";
                     break;
             }
+            os += $" (NT {version.Major}.{version.Minor}, Build {version.Build})";
             return os;
         }
 
